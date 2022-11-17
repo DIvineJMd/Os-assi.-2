@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<pthread.h>
+#include<time.h>
+#include<sys/time.h>
+#include<pthread.h>
+#include<sched.h>
+#include<unistd.h>
+#include<math.h>
+#define NUM_THREAD 3
+void countA();
+void countB();
+void countC();
+void *Thread_A(void *p){
+  //...//
+}
+void *Thread_B(void *p){
+  //....//
+}
+void *Thread_C(void *p){
+    //....//
+}
+//......................................................................
+int main(int argc , char* argv[]){
+    int i,policy;
+    pthread_t thr[NUM_THREAD];
+    pthread_attr_t attribute ;
+
+    
+}
+//......................................................................
+void *countA(void *p){
+    long double c=0;
+    printf("\nExecuting A\n")
+    for(long double i=0;i<pow(2,32);i++){
+        c+=1;
+    }
+    
+}
+void *countB(void *p){
+    long double c=0;
+    printf("\nExecuting B\n")
+    for(long double i=0;i<pow(2,32);i++){
+        c+=1;
+    }
+    
+}
+void *countC(void *p){
+    long double c=0;
+    printf("\nExecuting C\n")
+    for(long double i=0;i<pow(2,32);i++){
+        c+=1;
+    }
+    
+}
