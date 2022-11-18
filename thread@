@@ -1,0 +1,95 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <vector>
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+int loop_count = 10000;
+volatile int index = 0;
+char data[20000];
+
+#define handle_error_en(en, msg) \
+do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
+
+static void *
+thread_start1(void *arg) {
+for (; index < loop_count; index++) {
+data[index] = '1';
+}
+}
+static void *
+thread_start2(void *arg) {
+for (; index < loop_count; index++) {
+data[index] = '2';
+}
+}
+
+int main(int argc, char *argv[]) {
+pthread_t thr, thr2;
+pthread_attr_t attr;
+pthread_attr_t *attrp; /* NULL or &attr */
+int s;
+
+attrp = NULL;
+
+int stack_size;
+void *sp;
+
+attrp = &attr;
+
+s = pthread_attr_init(&attr);
+if (s != 0)
+handle_error_en(s, "pthread_attr_init");
+
+s = pthread_attr_setschedpolicy(&attr,
+ SCHED_FIFO);
+if (s != 0)
+handle_error_en(s, "pthread_attr_setschedpolicy");
+
+s = pthread_attr_setinheritsched(&attr, 
+PTHREAD_EXPLICIT_SCHED);
+if (s != 0)
+handle_error_en(s, "pthread_attr_setinheritsched");
+
+struct sched_param schedParam;
+schedParam.__sched_priority = sched_get_priority_min(SCHED_FIFO);
+s = pthread_attr_setschedparam(&attr, &schedParam);
+if (s != 0)
+handle_error_en(s, "pthread_attr_setschedparam");
+
+s = pthread_create(&thr, attrp, &thread_start1, (void*) "thr1 ");
+if (s != 0)
+handle_error_en(s, "pthread_create");
+
+s = pthread_create(&thr2, attrp, &thread_start2, (void*) "thr2 ");
+if (s != 0)
+handle_error_en(s, "pthread_create");
+
+if (attrp != NULL) {
+s = pthread_attr_destroy(attrp);
+if (s != 0)
+handle_error_en(s, "pthread_attr_destroy");
+}
+
+pthread_join(thr, NULL);
+pthread_join(thr2, NULL);
+
+cout<<index<<endl;
+index = 0;
+for (; index < loop_count; index++) {
+cout << data[index];
+}
+cout<<endl<<index<<endl;
+
+return 0;
+}
+ 	
+
+
+
+
