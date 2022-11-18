@@ -12,20 +12,33 @@ void countA();
 void countB();
 void countC();
 void *Thread_A(void *p){
-  //...//
+  countA();
 }
 void *Thread_B(void *p){
-  //....//
+  countB();
 }
 void *Thread_C(void *p){
-    //....//
+    countB();
 }
 //......................................................................
 int main(int argc , char* argv[]){
     int i,policy;
     pthread_t thr[NUM_THREAD];
     pthread_attr_t attribute ;
-
+    pthread_attr_t *attr;
+    int s;
+    struct sched_param prio;
+    attr=NULL;
+    int stack_size;
+    void *sp;
+    attr==&attribute;
+    s=pthread_attr_init(&attribute);
+    if(s!=0){fprintf(stderr,"Error in attribute initialisation.\n")}
+    s=pthread_attr_setschedpolicy(&attribute,SCHED_OTHER);
+    if(s!=0){fprintf(stderr,"Error in Schedulling other.");}
+    s = pthread_attr_setinheritsched(&attribute, PTHREAD_EXPLICIT_SCHED);
+    if (s != 0){fprintf(stderr, "pthread_attr_setinheritsched");}
+    
     
 }
 //......................................................................
